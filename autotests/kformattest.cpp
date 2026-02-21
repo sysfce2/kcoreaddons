@@ -400,24 +400,25 @@ void KFormatTest::formatRelativeDate()
              QStringLiteral("Today at %1").arg(testDateTime.toString(QStringLiteral("hh:mm:ss"))));
 #endif
 
+    // Use a safety margin (e.g -15s instead of -1s) to avoid flackiness
     // 1 second ago
     now = QDateTime::currentDateTime();
-    testDateTime = now.addSecs(-1);
+    testDateTime = now.addSecs(-15);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::ShortFormat), QStringLiteral("Just now"));
 
     // 1 second ahead
     now = QDateTime::currentDateTime();
-    testDateTime = now.addSecs(1);
+    testDateTime = now.addSecs(15);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::ShortFormat), QStringLiteral("Now"));
 
     // 5 minutes ago
     now = QDateTime::currentDateTime();
-    testDateTime = now.addSecs(-300);
+    testDateTime = now.addSecs(-330);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::ShortFormat), QStringLiteral("5 minute(s) ago"));
 
-    // 5 minutes ahead, plus some seconds to be not that flacky during testing
+    // 5 minutes ahead
     now = QDateTime::currentDateTime();
-    testDateTime = now.addSecs(310);
+    testDateTime = now.addSecs(330);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::ShortFormat), "In 5 minute(s)"_L1);
 
     testDateTime = QDateTime(QDate::currentDate().addDays(8), QTime(3, 0, 0));
@@ -440,14 +441,14 @@ void KFormatTest::formatRelativeDate()
     QCOMPARE(formatFrench.formatRelativeDateTime(testDateTime, QLocale::LongFormat), QStringLiteral("Dimanche 3 octobre 2021 at 05:33"));
 
     // narrow format
-    testDateTime = QDateTime::currentDateTime().addSecs(-1);
+    testDateTime = QDateTime::currentDateTime().addSecs(-15);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::NarrowFormat), "Just now"_L1);
-    testDateTime = QDateTime::currentDateTime().addSecs(1);
+    testDateTime = QDateTime::currentDateTime().addSecs(15);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::NarrowFormat), "Now"_L1);
 
     testDateTime = QDateTime::currentDateTime().addSecs(-330);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::NarrowFormat), "5 min(s) ago"_L1);
-    testDateTime = QDateTime::currentDateTime().addSecs(310);
+    testDateTime = QDateTime::currentDateTime().addSecs(330);
     QCOMPARE(format.formatRelativeDateTime(testDateTime, QLocale::NarrowFormat), "5 min(s)"_L1);
 }
 
